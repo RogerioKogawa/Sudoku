@@ -88,6 +88,6 @@ public class Sudoku{
                                                 .collect(Collectors.toList()));
         }
 
-        this.colunasGlobais = linhasGlobais;
+        this.colunasGlobais = colunasGlobais;
     }
 }
