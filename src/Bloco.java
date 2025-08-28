@@ -30,6 +30,10 @@ public class Bloco {
         return posicaoNumerosIniciais;
     }
 
+    public Map<Integer, Integer> getPosicaoNumeros(){
+        return posicaoNumeros;
+    }
+
     public List<Integer> getLinha(int numeroLinha){
         List<Integer> linha = new ArrayList<>();
         if(numeroLinha == 0){
