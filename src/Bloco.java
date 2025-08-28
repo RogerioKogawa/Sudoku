@@ -61,5 +61,6 @@ public class Bloco {
             coluna.add(posicaoNumeros.getOrDefault(6, null));
             coluna.add(posicaoNumeros.getOrDefault(9, null));
         }
+        return coluna;
     }
 }
