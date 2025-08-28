@@ -12,8 +12,8 @@ public class Sudoku{
     Bloco bloco8;
     Bloco bloco9;
     Map<Integer, Bloco> sudoku = new HashMap<>();
-    Map<Integer, List<Integer>> linhasGlobais;
-    Map<Integer, List<Integer>> colunasGlobais;
+    private Map<Integer, List<Integer>> linhasGlobais;
+    private Map<Integer, List<Integer>> colunasGlobais;
     public Sudoku(Bloco bloco1, Bloco bloco2, Bloco bloco3, Bloco bloco4, Bloco bloco5, Bloco bloco6, Bloco bloco7, Bloco bloco8, Bloco bloco9) {
         this.bloco1 = bloco1;
         this.bloco2 = bloco2;
@@ -25,6 +25,8 @@ public class Sudoku{
         this.bloco8 = bloco8;
         this.bloco9 = bloco9;
         mapearBlocos();
+        criarColunasGlobais();
+        criarLinhasGlobais();
     }
     public void mapearBlocos(){
         sudoku.put(1, bloco1);
@@ -67,7 +69,6 @@ public class Sudoku{
 
         this.linhasGlobais = linhasGlobais;
     }
-
     public void criarColunasGlobais(){
         Map<Integer, List<Integer>> colunasGlobais = new HashMap<>();
         for (int i = 1; i <= 3; i++) {
@@ -90,4 +91,14 @@ public class Sudoku{
 
         this.colunasGlobais = colunasGlobais;
     }
+
+    public  List<Integer> getLinhasGlobais(int numeroLinha){
+        return linhasGlobais.getOrDefault(numeroLinha, null);
+    }
+    public  List<Integer> getColunasGlobais(int numeroColuna){
+        return colunasGlobais.getOrDefault(numeroColuna, null);
+    }
+
+
+
 }
