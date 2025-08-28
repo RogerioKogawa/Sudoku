@@ -14,9 +14,9 @@ public class Bloco {
     }
 
     public boolean adicionarNumero(int numero, int posicaoNumero) throws NumeroInvalidoException {
-        if(!(ValidarNumero.validar(numero,this).equals("Número valido")) ||
-           !(ValidarNumero.validar(posicaoNumero,this).equals("Número valido"))||
-           posicaoNumerosIniciais.containsKey(numero)) return false
+        if(!(ValidarNumero.validarValor(numero,this).equals("Número valido")) ||
+           !(ValidarNumero.validarValor(posicaoNumero,this).equals("Número valido"))||
+           posicaoNumerosIniciais.containsKey(numero)) return false;
         posicaoNumeros.put(numero,posicaoNumero);
         return true;
     }

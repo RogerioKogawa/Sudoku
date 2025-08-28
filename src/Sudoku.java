@@ -41,11 +41,34 @@ public class Sudoku{
     }
 
     public boolean adicionarNumero(int idBloco, int numero, int posicaoNumero){
-        //Verifica se o numero já esta alocado no bloco
-        if(sudoku.get(idBloco).getPosicaoNumeros().containsKey(numero)) return false;
+        try {
+            ValidarPosicaoNumero.validarPosicaoInserir(numero,
+                                                sudoku.get(idBloco),
+                                                getLinhasGlobais((posicaoNumero - 1)/3 + 1),
+                                                getColunasGlobais((posicaoNumero - 1) % 3 + 1));
+            sudoku.get(idBloco).adicionarNumero(numero, posicaoNumero);
+            criarLinhasGlobais();
+            criarColunasGlobais();
+            return true;
+        }catch(PosicaoInvalidaException | NumeroInvalidoException e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
 
-
-        return true;
+    public boolean removerNumero(int idBloco, int posicaoNumero){
+        if(sudoku.get(idBloco).getPosicaoNumerosIniciais().containsKey(posicaoNumero)){
+            System.out.println("Não é possível remover um número inicial");
+            return false;
+        }else{
+            try{
+                ValidarPosicaoNumero.validarPosicaoRemover(posicaoNumero, sudoku.get(idBloco));
+                return true;
+            }catch (PosicaoInvalidaException e){
+                System.out.println(e.getMessage());
+                return false;
+            }
+        }
     }
     public void criarLinhasGlobais() {
         Map<Integer, List<Integer>> linhasGlobais = new HashMap<>();
@@ -98,7 +121,4 @@ public class Sudoku{
     public  List<Integer> getColunasGlobais(int numeroColuna){
         return colunasGlobais.getOrDefault(numeroColuna, null);
     }
-
-
-
 }
