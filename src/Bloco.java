@@ -12,6 +12,10 @@ public class Bloco {
     }
 
     public boolean adicionarNumero(int numero, int posicaoNumero){
-        
+
+    }
+
+    public Map<Integer, Integer> getPosicaoNumerosIniciais() {
+        return posicaoNumerosIniciais;
     }
 }
