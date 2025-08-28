@@ -20,6 +20,12 @@ public class Bloco {
         return true;
     }
 
+    public boolean removerNumero(int posicaoNumero){
+        if(posicaoNumerosIniciais.containsKey(posicaoNumero)|| !(posicaoNumeros.containsKey(posicaoNumero))) return false;
+        posicaoNumeros.remove(posicaoNumero);
+        return true;
+    }
+
     public Map<Integer, Integer> getPosicaoNumerosIniciais() {
         return posicaoNumerosIniciais;
     }
