@@ -121,4 +121,8 @@ public class Sudoku{
     public  List<Integer> getColunasGlobais(int numeroColuna){
         return colunasGlobais.getOrDefault(numeroColuna, null);
     }
+
+    public Bloco getBloco(int idBloco) {
+        return sudoku.get(idBloco);
+    }
 }

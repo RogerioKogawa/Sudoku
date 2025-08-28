@@ -9,7 +9,7 @@ public class ValidarPosicaoNumero {
             return "Posição válida";
         }
     }
-    
+
     public static String validarPosicaoRemover(int posicaoNumero, Bloco bloco) throws PosicaoInvalidaException {
         if (bloco.isNull() || !(bloco.getPosicaoNumerosIniciais().containsKey(posicaoNumero))) {
             throw new PosicaoInvalidaException("Posição não ocupada");
