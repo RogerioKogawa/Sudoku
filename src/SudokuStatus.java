@@ -2,7 +2,6 @@ import java.util.*;
 
 public class SudokuStatus {
 
-    private Map<Integer, List<Integer>> posicaoNumeros;
     Sudoku sudoku;
     public SudokuStatus(Sudoku sudoku){
         this.sudoku = sudoku;

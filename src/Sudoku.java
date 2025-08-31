@@ -40,79 +40,82 @@ public class Sudoku{
         sudoku.put(9, bloco9);
     }
 
-    public boolean adicionarNumero(int idBloco, int numero, int posicaoNumero){
+    public boolean adicionarNumero(int idBloco, int numero, int posicaoNumero) {
         try {
-            ValidarPosicaoNumero.validarPosicaoInserir(numero,
-                                                sudoku.get(idBloco),
-                                                getLinhasGlobais((posicaoNumero - 1)/3 + 1),
-                                                getColunasGlobais((posicaoNumero - 1) % 3 + 1));
+            //Valida se o valor esta entre 1 e 9;
+            ValidarNumero.validarValor(numero, sudoku.get(idBloco));
+            ValidarNumero.validarValor(posicaoNumero, sudoku.get(idBloco));
+            // Obtém a posição do enum para esse bloco e posição
+            PosicaoBloco posicao = PosicaoBloco.getByPosicaoBloco(idBloco, posicaoNumero);
+
+            // Recupera a linha global e coluna global
+            int linhaGlobal = posicao.getLinhaGlobal();
+            int colunaGlobal = posicao.getColunaGlobal();
+
+            // Pega os valores atuais da linha e coluna global
+            List<Integer> valoresLinha = getLinhasGlobais(linhaGlobal);
+            List<Integer> valoresColuna = getColunasGlobais(colunaGlobal);
+
+            // Valida se é possível inserir
+            ValidarPosicaoNumero.validarPosicaoInserir(numero, sudoku.get(idBloco), valoresLinha, valoresColuna);
+
+            // Insere o número
             sudoku.get(idBloco).adicionarNumero(numero, posicaoNumero);
+
+            // Atualiza as linhas e colunas globais
             criarLinhasGlobais();
             criarColunasGlobais();
+
             return true;
-        }catch(PosicaoInvalidaException | NumeroInvalidoException e){
+        } catch (PosicaoInvalidaException | NumeroInvalidoException e) {
             System.out.println(e.getMessage());
             return false;
         }
     }
 
-    public boolean removerNumero(int idBloco, int posicaoNumero){
-        if(sudoku.get(idBloco).getPosicaoNumerosIniciais().containsKey(posicaoNumero)){
+
+    public boolean removerNumero(int idBloco, int posicaoNumero) {
+        PosicaoBloco posicao = PosicaoBloco.getByPosicaoBloco(idBloco, posicaoNumero);
+
+        Bloco bloco = sudoku.get(idBloco);
+
+        if (bloco.getPosicaoNumerosIniciais().containsKey(posicaoNumero)) {
             System.out.println("Não é possível remover um número inicial");
             return false;
-        }else{
-            try{
-                ValidarPosicaoNumero.validarPosicaoRemover(posicaoNumero, sudoku.get(idBloco));
+        } else {
+            try {
+                ValidarPosicaoNumero.validarPosicaoRemover(posicaoNumero, bloco);
+                bloco.getPosicaoNumeros().remove(posicaoNumero);
+                criarLinhasGlobais();
+                criarColunasGlobais();
                 return true;
-            }catch (PosicaoInvalidaException e){
+            } catch (PosicaoInvalidaException e) {
                 System.out.println(e.getMessage());
                 return false;
             }
         }
     }
+
     public void criarLinhasGlobais() {
-        Map<Integer, List<Integer>> linhasGlobais = new HashMap<>();
-        for (int i = 1; i <= 3; i++) {
-            linhasGlobais.put(i, Stream.of(sudoku.get(1).getSubLinhaGlobal(i),
-                                           sudoku.get(2).getSubLinhaGlobal(i),
-                                           sudoku.get(3).getSubLinhaGlobal(i))
-                                           .flatMap(List::stream)
-                                           .collect(Collectors.toList()));
-            linhasGlobais.put(i + 3, Stream.of(sudoku.get(4).getSubLinhaGlobal(i + 3),
-                                               sudoku.get(5).getSubLinhaGlobal(i+ 3),
-                                               sudoku.get(6).getSubLinhaGlobal(i+ 3))
-                                               .flatMap(List::stream)
-                                               .collect(Collectors.toList()));
-            linhasGlobais.put(i + 6, Stream.of(sudoku.get(7).getSubLinhaGlobal(i + 6),
-                                               sudoku.get(8).getSubLinhaGlobal(i + 6),
-                                               sudoku.get(9).getSubLinhaGlobal(i + 6))
-                                               .flatMap(List::stream)
-                                               .collect(Collectors.toList()));
+        linhasGlobais = new HashMap<>();
+        // percorre todas as posições do enum
+        for (PosicaoBloco pb : PosicaoBloco.values()) {
+            int linhaGlobal = pb.getLinhaGlobal();
+            linhasGlobais.computeIfAbsent(linhaGlobal, k -> new ArrayList<>())
+                    .add(sudoku.get(pb.getIdBloco()).getPosicaoNumeros()
+                            .getOrDefault(pb.getPosicao(), null));
         }
-
-        this.linhasGlobais = linhasGlobais;
     }
-    public void criarColunasGlobais(){
-        Map<Integer, List<Integer>> colunasGlobais = new HashMap<>();
-        for (int i = 1; i <= 3; i++) {
-            colunasGlobais.put(i, Stream.of(sudoku.get(1).getSubColunaGlobal(i),
-                                            sudoku.get(2).getSubColunaGlobal(i),
-                                            sudoku.get(3).getSubColunaGlobal(i))
-                                            .flatMap(List::stream)
-                                            .collect(Collectors.toList()));
-            colunasGlobais.put(i + 3, Stream.of(sudoku.get(4).getSubColunaGlobal(i + 3),
-                                                sudoku.get(5).getSubColunaGlobal(i+ 3),
-                                                sudoku.get(6).getSubColunaGlobal(i+ 3))
-                                                .flatMap(List::stream)
-                                                .collect(Collectors.toList()));
-            colunasGlobais.put(i + 6, Stream.of(sudoku.get(7).getSubColunaGlobal(i + 6),
-                                                sudoku.get(8).getSubColunaGlobal(i + 6),
-                                                sudoku.get(9).getSubColunaGlobal(i + 6))
-                                                .flatMap(List::stream)
-                                                .collect(Collectors.toList()));
-        }
 
-        this.colunasGlobais = colunasGlobais;
+    public void criarColunasGlobais() {
+        colunasGlobais = new HashMap<>();
+        // percorre todas as posições do enum
+        for (PosicaoBloco pb : PosicaoBloco.values()) {
+            int colunaGlobal = pb.getColunaGlobal();
+            colunasGlobais.computeIfAbsent(colunaGlobal, k -> new ArrayList<>())
+                    .add(sudoku.get(pb.getIdBloco()).getPosicaoNumeros()
+                            .getOrDefault(pb.getPosicao(), null));
+        }
     }
 
     public  List<Integer> getLinhasGlobais(int numeroLinha){
